@@ -7,9 +7,9 @@
 
 import Foundation
 
-class APIClient {
-    static let shared = APIClient()
-    private init() {}
+class ApiClient {
+    static let shared = ApiClient()
+    init() {}
     
     func fetchUsers(completion: @escaping (Result<[User], Error>) -> Void) {
         guard let url = URL(string: "https://backend-usershandlerapp.fly.dev/usershandlerapp/api/users/getAll") else {

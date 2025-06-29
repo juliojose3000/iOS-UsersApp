@@ -11,7 +11,13 @@ import SwiftUI
 struct UserListApp: App {
     var body: some Scene {
         WindowGroup {
-            UserListView()
+            let apiClient = ApiClient()
+            let userRepository = UserRepositoryImpl(apiClient: apiClient)
+            let getUsersUseCase = GetUsersUseCase(userRepository: userRepository)
+            let viewModel = UserListViewModel(getUsersUseCase: getUsersUseCase)
+            
+            UserListView(viewModel: viewModel)
+            
         }
     }
 }

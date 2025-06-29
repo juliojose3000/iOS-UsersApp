@@ -13,9 +13,14 @@ class UserListViewModel: ObservableObject {
     @Published var errorMessage: String = ""
     
     private var cancellables = Set<AnyCancellable>()
+    private let getUsersUseCase: GetUsersUseCase
+    
+    init(getUsersUseCase: GetUsersUseCase) {
+        self.getUsersUseCase = getUsersUseCase
+    }
     
     func fetchUsers() {
-        APIClient.shared.fetchUsers { [weak self] result in
+        ApiClient.shared.fetchUsers { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let users):

@@ -8,22 +8,25 @@
 import SwiftUI
 
 struct UserListView: View {
-    @StateObject private var viewModel = UserListViewModel()
+    
+    //@StateObject private var viewModel = UserListViewModel()
+    /*private var viewModel: UserListViewModel
+    
+    init(viewModel: UserListViewModel) {
+        self.viewModel = viewModel
+    }*/
+    
+    @StateObject private var viewModel: UserListViewModel
+    
+    init(viewModel: UserListViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
 
     var body: some View {
         NavigationView {
             List(viewModel.users) { user in
                 HStack {
-                    AsyncImage(url: URL(string: user.photoUrl)) { image in
-                        image.resizable().scaledToFill().frame(width: 50, height: 50).clipShape(Circle())
-                    } placeholder: {
-                        ProgressView().progressViewStyle(CircularProgressViewStyle())
-                    }
-                    
-                    VStack(alignment: .leading) {
-                        Text("\(user.name) \(user.lastname)").font(.headline)
-                        Text(user.email).font(.subheadline).foregroundColor(.gray)
-                    }
+                    Text("\(user.name) \(user.lastname)").font(.headline)
                 }
                 .padding()
             }
@@ -40,8 +43,15 @@ struct UserListView: View {
     }
 }
 
+
 struct UserListView_Previews: PreviewProvider {
     static var previews: some View {
-        UserListView()
+        let apiClient = ApiClient()
+        let userRepository = UserRepositoryImpl(apiClient: apiClient)
+        let getUsersUseCase = GetUsersUseCase(userRepository: userRepository)
+        let viewModel = UserListViewModel(getUsersUseCase: getUsersUseCase)
+        
+        UserListView(viewModel: viewModel)
     }
 }
+
